@@ -32,10 +32,7 @@ class Handler:
         while self.working:
             data, addr = self.server.listen()
             if (data == None):
-                print("Error")
                 continue
-            if (not self.clientExists(addr)):
-                self.addClient(addr)
             self.serverDataAction(data, addr)
 
     def startGameLogic(self):
@@ -52,7 +49,7 @@ class Handler:
 
     def removeClient(self, addr):
         with self.clientLock:
-            return self.clientList.pop(addr, None)
+            del self.clientList[addr]
 
     def getClient(self, addr):
         with self.clientLock:

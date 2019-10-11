@@ -13,8 +13,11 @@ class Server:
         self.bufferSize = bufferSize
 
     def listen(self):
-        data, addr = self.sock.recvfrom(self.bufferSize)
-        return data.decode("ascii"), addr
+        try:
+            data, addr = self.sock.recvfrom(self.bufferSize)
+            return data.decode("ascii"), addr
+        except:
+            return None, None
 
     def send(self, data, addr):
         with self.lock:
