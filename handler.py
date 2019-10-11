@@ -45,7 +45,7 @@ class Handler:
     #client operations
     def addClient(self, addr):
         with self.clientLock:
-            self.clientList[addr] = client.Client(addr)
+            self.clientList[addr] = client.Client(addr, self)
 
     def removeClient(self, addr):
         with self.clientLock:
@@ -61,10 +61,7 @@ class Handler:
                 return True
         return False
 
-    def sendTo(self, data, client):
-        self.server.send(data, client.addr)
-
     def sentToAll(self, data):
         with self.clientLock:
             for client in self.clientList.values():
-                self.sendTo(data, client)
+                client.send(data)

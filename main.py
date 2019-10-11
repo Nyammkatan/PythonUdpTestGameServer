@@ -25,7 +25,7 @@ class Helper:
             self.initRects()
             self.timer = 0
 
-        #sendint states
+        #sending states
         self.timerStateUpdate += dt
         if (self.timerStateUpdate > 0.1):
             self.timerStateUpdate -= 0.1
@@ -43,7 +43,7 @@ class Helper:
                 c = self.handler.clientList[a]
                 if (not c.checkConnection(1)):
                     del self.handler.clientList[a]
-                    print("removing client")
+                    print("removing client "+str(a))
 
     def sendStates(self):
         num = 0
@@ -53,7 +53,6 @@ class Helper:
             self.handler.sentToAll(json.dumps(state))
 
     def initRects(self):
-        print("creating rects")
         for i in range(20):
             r = rect.Rect(random.randrange(0, 640), i)
             self.list1.append(r)
