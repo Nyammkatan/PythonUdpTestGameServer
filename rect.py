@@ -7,10 +7,10 @@ class Rect:
     x = 0.0
     y = 0.0
     a = 0.0
-    vy = 100
+    vy = 200
 
     state = {
-        'id':id,
+        'id':-1,
         'x':0,
         'y':0,
         'a':0
@@ -21,11 +21,10 @@ class Rect:
         self.x = x
         self.a = random.randrange(0, 360)
         self.id = id
-        self.state["id"] = id
 
     def update(self, dt):
         self.y+=self.vy*dt
-        self.a+=20*dt
+        self.a+=200*dt
         if (self.a >= 360):
             self.a -= 360
 
@@ -33,6 +32,7 @@ class Rect:
         self.state["x"] = handler.truncate(self.x, 2)
         self.state["y"] = handler.truncate(self.y, 2)
         self.state["a"] = handler.truncate(self.a, 2)
+        self.state["id"] = self.id
         return self.state
 
 
