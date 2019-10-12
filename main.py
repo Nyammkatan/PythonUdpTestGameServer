@@ -21,7 +21,7 @@ class Helper:
     def gameLogicAction(self, dt):
         #rects creating
         self.timer += dt
-        if (self.timer > 0.5):
+        if (self.timer > 0.25):
             self.initRects()
             self.timer = 0
 
@@ -62,7 +62,7 @@ class Helper:
 
     id_index = 0
     def initRects(self):
-        for i in range(10):
+        for i in range(5):
             r = rect.Rect(random.randrange(0, 640), self.id_index)
             self.id_index += 1
             self.list1[self.id_index] = r
