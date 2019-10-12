@@ -9,14 +9,6 @@ class Rect:
     a = 0.0
     vy = 250
 
-    state = {
-        'id':-1,
-        'x':0,
-        'y':0,
-        'a':0
-
-    }
-
     def __init__(self, x, id):
         self.x = x
         self.a = random.randrange(0, 360)
@@ -26,12 +18,12 @@ class Rect:
         self.y+=self.vy*dt
         self.a+=200*dt
         
-    def getState(self):
-        self.state["x"] = handler.truncate(self.x, 2)
-        self.state["y"] = handler.truncate(self.y, 2)
-        self.state["a"] = handler.truncate(self.a, 2)
-        self.state["id"] = self.id
-        return self.state
+    def getState(self, packet):
+        packet["x"] = handler.truncate(self.x, 2)
+        packet["y"] = handler.truncate(self.y, 2)
+        packet["a"] = handler.truncate(self.a, 2)
+        packet["id"] = self.id
+        return packet
 
 
     

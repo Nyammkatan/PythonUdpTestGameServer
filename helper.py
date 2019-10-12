@@ -49,19 +49,25 @@ class Helper:
     def getFilterIdKeys(self, client, idListKeys):
         return idListKeys
 
+    def createPacket(self, important, p_id):
+        packet = {}
+        packet["im"] = 1 if important else 0
+        packet["p_id"] = p_id
+        return packet
+
     def sendIdAndState(self):
         with self.handler.clientLock:
             for client in self.handler.clientList.values():
                 if (client.ready):
                     idListKeys = self.getFilterIdKeys(client, list(self.allGameObjects.keys()))
-                    packet = {"p_id":0}
+                    packet = self.createPacket(False, 0)
                     packet["id"] = idListKeys
                     data = json.dumps(packet)
                     client.send(data)
                     for i in idListKeys:
-                        state = self.allGameObjects[i].getState()
-                        state["p_id"] = 1
-                        client.send(json.dumps(state))
+                        packet = self.createPacket(False, 1)
+                        packet = self.allGameObjects[i].getState(packet)
+                        client.send(json.dumps(packet))
 
     def __init__(self):
         self.handler = handler.Handler("", 9999, self.serverDataAction, self.gameLogicAction)
