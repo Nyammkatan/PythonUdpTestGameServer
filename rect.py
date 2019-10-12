@@ -25,9 +25,7 @@ class Rect:
     def update(self, dt):
         self.y+=self.vy*dt
         self.a+=200*dt
-        #if (self.a >= 360):
-        #    self.a -= 360
-
+        
     def getState(self):
         self.state["x"] = handler.truncate(self.x, 2)
         self.state["y"] = handler.truncate(self.y, 2)
