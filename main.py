@@ -21,22 +21,22 @@ class Helper:
     def gameLogicAction(self, dt):
         #rects creating
         self.timer += dt
-        if (self.timer > 2):
+        if (self.timer > 0.5):
             self.initRects()
             self.timer = 0
 
         #sending id
         #sending states
         self.timerStateUpdate += dt
-        if (self.timerStateUpdate > 0.2):
-            self.timerStateUpdate -= 0.2
+        if (self.timerStateUpdate > 0.1):
+            self.timerStateUpdate -= 0.1
             self.sendId()
             self.sendState()
 
         #game logic rects
         for i in list(self.list1.keys()):
             self.list1[i].update(dt)
-            if self.list1[i].y > 480:
+            if self.list1[i].y > 800:
                 del self.list1[i]
 
         #game logic clients time

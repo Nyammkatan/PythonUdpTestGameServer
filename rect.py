@@ -5,9 +5,9 @@ class Rect:
 
     id = -1
     x = 0.0
-    y = 0.0
+    y = -400
     a = 0.0
-    vy = 200
+    vy = 250
 
     state = {
         'id':-1,
@@ -25,8 +25,8 @@ class Rect:
     def update(self, dt):
         self.y+=self.vy*dt
         self.a+=200*dt
-        if (self.a >= 360):
-            self.a -= 360
+        #if (self.a >= 360):
+        #    self.a -= 360
 
     def getState(self):
         self.state["x"] = handler.truncate(self.x, 2)
