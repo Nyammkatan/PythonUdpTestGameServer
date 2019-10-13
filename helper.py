@@ -4,13 +4,15 @@ import rect
 import random
 import handler
 import json
+from threading import Lock
 
 class Helper:
     
     timerStateUpdate = 0
+    allGameObjects = {}
+    
     stateUpdateTimeInterval = 0.1
     clientCheckConnectionTime = 1
-    allGameObjects = {}
 
     def readFromClient(self, packet, client):
         pass
@@ -64,10 +66,29 @@ class Helper:
     def getFilterIdKeys(self, client, idListKeys):
         return idListKeys
 
+    ni_packet_number_counter = 0
+    i_packet_number_counter = 0
+
+    def getCounter(self, important):
+        value = 0
+        if (not important):
+            value = self.ni_packet_number_counter
+            self.ni_packet_number_counter+=1
+            if (self.ni_packet_number_counter >= 1000):
+                self.ni_packet_number_counter = 0
+        else:
+            value = self.i_packet_number_counter
+            self.i_packet_number_counter+=1
+            if (self.i_packet_number_counter >= 1000):
+                self.i_packet_number_counter = 0
+        return value
+
     def createPacket(self, important, p_id):
         packet = {}
         packet["im"] = 1 if important else 0
         packet["p_id"] = p_id
+        with self.counterLock:
+            packet["num"] = self.getCounter(important)
         return packet
 
     def sendIdAndState(self):
@@ -86,6 +107,7 @@ class Helper:
 
     def __init__(self):
         self.handler = handler.Handler("", 9999, self.serverDataAction, self.gameLogicAction)
+        self.counterLock = Lock()
         self.handler.startReading()
         self.handler.startGameLogic()
         pass

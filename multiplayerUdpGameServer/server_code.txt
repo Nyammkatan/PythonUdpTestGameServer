@@ -1,0 +1,32 @@
+Server:
+
+//variables
+    clientList:Dict(addr, Client)
+    bufferSize:int
+    readingT:Thread => readingThreadMethod
+    writingT:Thread => writingThreadMethod
+    lock:Lock
+    maxPacketNumberRange:int
+    working:Boolean
+    workingLock:Lock
+    disconnectTime:float
+
+//methods
+    setBufferSize(bufferSize):void
+    list():data:str, addr:tuple
+    send(data, addr):void
+    addClient(addr):void
+    removeClient(addr):void
+    receivingMessageFromClient(client, packet):void
+    checkPacketNumber(numberReceived, client):Boolean -setting client lastPacketNumber
+    checkIPacketNumber(numberReceived, client):Boolean -setting client lastIPacketNumber
+    isWorking():Boolean
+    getClientList():Dict
+
+//thread methods
+    readingThreadMethod():void -calls- receivingMessageFromClient
+    writingThreadMethod():void
+
+//can override
+    getSimplePacket(client, packet):void
+    getImportantPacket(client, packet):void
