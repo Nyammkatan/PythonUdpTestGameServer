@@ -12,7 +12,13 @@ class Helper:
     clientCheckConnectionTime = 1
     allGameObjects = {}
 
-    def readFromClient(self, data, client):
+    def readFromClient(self, packet, client):
+        pass
+
+    def readImportantFromClient(self, packet, client):
+        pass
+
+    def readResponseFromClient(self, packet, client):
         pass
 
     def disconnectOfClient(self, client):
@@ -22,8 +28,17 @@ class Helper:
         if (not self.handler.clientExists(addr)):
             self.handler.addClient(addr)
         client = self.handler.getClient(addr)
-        self.readFromClient(data, client)
-        client.holdConnection()
+        try:
+            packet = json.loads(data)
+            if (packet["im"] == 0):
+                self.readFromClient(packet, client)
+            elif (packet["im"] == 1):
+                self.readImportantFromClient(packet, client)
+            elif (packet["im"] == 2):
+                self.readResponseFromClient(packet, client)
+            client.holdConnection()
+        except:
+            pass
 
     def gameLogicAction(self, dt):
         self.timerStateUpdate += dt
