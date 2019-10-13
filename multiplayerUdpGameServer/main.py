@@ -20,8 +20,14 @@ class Game(game_handler.GameHandler):
     def getImportantPacket(self, client, packet):
         client.ready = True
 
+    def objectInTheCenter(self, o):
+        if (abs(o.x-320) < 500):
+            if (abs(o.y-240) < 500):
+                return True
+        return False
+
     def getFilterIdKeys(self, client, idListKeys):
-        return idListKeys
+        return list(filter(lambda x: self.objectInTheCenter(self.allGameObjects[x]), idListKeys))
 
     def update(self, dt):
         self.timer += dt
