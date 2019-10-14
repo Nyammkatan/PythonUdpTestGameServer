@@ -38,11 +38,11 @@ class GameHandler:
         for client in list(self.server.getClientList().values()):
             if (client.ready):
                 idListKeys = self.getFilterIdKeys(client, list(self.allGameObjects.keys()))
-                packet = self.createPacket(client, False, 0)
+                packet = self.createSimplePacket(client, 0)
                 packet["id"] = idListKeys
                 client.send(packet)
                 for i in idListKeys:
-                    packet = self.createPacket(client, False, 1)
+                    packet = self.createSimplePacket(client, 1)
                     packet = self.allGameObjects[i].getState(packet)
                     client.send(packet)
 
@@ -60,10 +60,18 @@ class GameHandler:
                 client.i_packet_number_counter = 0
         return value
 
-    def createPacket(self, client, important, p_id):
+    def createSimplePacket(self, client, p_id):
         packet = {}
-        packet["im"] = 1 if important else 0
+        packet["im"] = 0
         packet["p_id"] = p_id
         with client.counterLock:
-            packet["num"] = self.getCounter(client, important)
+            packet["num"] = self.getCounter(client, False)
+        return packet
+
+    def createIPacket(self, client, p_id):
+        packet = {}
+        packet["im"] = 1
+        packet["p_id"] = p_id
+        with client.counterLock:
+            packet["num"] = self.getCounter(client, True)
         return packet

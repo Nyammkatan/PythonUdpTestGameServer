@@ -21,6 +21,10 @@ class Client:
         self.iMessagesLock = Lock()
         self.counterLock = Lock()
 
+    def addNewIMessage(self, packet):
+        with self.iMessagesLock:
+            self.iMessages.append(packet)
+
     def getFirstIMessage(self):
         with self.iMessagesLock:
             return self.iMessages[0]

@@ -10,6 +10,9 @@ class Game(game_handler.GameHandler):
 
     def newClientJoined(self, client):
         print("new client "+str(client.addr))
+        packet = self.createIPacket(client, 0)
+        packet["data"] = "greeting packet"
+        client.addNewIMessage(packet)
 
     def disconnectOfClient(self, client):
         print("disconnecting "+str(client.addr))
@@ -19,6 +22,7 @@ class Game(game_handler.GameHandler):
 
     def getImportantPacket(self, client, packet):
         client.ready = True
+        print(packet["data"])
 
     def objectInTheCenter(self, o):
         if (abs(o.x-320) < 500):
@@ -47,7 +51,7 @@ class Game(game_handler.GameHandler):
             self.allGameObjects[self.id_index] = r
 
     def __init__(self):
-        super().__init__(server.Server("", 9999, self))
+        super().__init__(server.Server("", 9999, self, 1000))
 
 print("new version")
 game = Game()

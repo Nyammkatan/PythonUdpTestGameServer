@@ -11,7 +11,8 @@ class Server:
     maxPacketNumberRange = 1000
     disconnectTime = 2
 
-    def __init__(self, host, port, worker):
+    def __init__(self, host, port, worker, maxPacketNumberRange):
+        self.maxPacketNumberRange = maxPacketNumberRange
         self.worker = worker
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((host, port))
