@@ -1,5 +1,5 @@
 import random
-import handler
+import gameUtils
 
 class Rect:
 
@@ -19,9 +19,9 @@ class Rect:
         self.a+=200*dt
         
     def getState(self, packet):
-        packet["x"] = handler.truncate(self.x, 2)
-        packet["y"] = handler.truncate(self.y, 2)
-        packet["a"] = handler.truncate(self.a, 2)
+        packet["x"] = gameUtils.truncate(self.x, 2)
+        packet["y"] = gameUtils.truncate(self.y, 2)
+        packet["a"] = gameUtils.truncate(self.a, 2)
         packet["id"] = self.id
         return packet
 

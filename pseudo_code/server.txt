@@ -1,8 +1,0 @@
-Server
-    sock:Socket
-    bufferSize:int
-    readingThread:Thread
-
-    
-
-

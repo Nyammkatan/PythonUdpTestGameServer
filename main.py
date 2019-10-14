@@ -1,76 +1,56 @@
 import server
-import time
-import rect
+import game_handler
 import random
-import handler
-import json
+import rect
 
-class Helper:
+class Game(game_handler.GameHandler):
 
     timer = 0
-    timerStateUpdate = 0
-    list1 = {}
+    id_index = 0
 
-    def serverDataAction(self, data, addr):
-        if (not self.handler.clientExists(addr)):
-            self.handler.addClient(addr)
-        client = self.handler.getClient(addr)
+    def newClientJoined(self, client):
+        print("new client "+str(client.addr))
+        packet = self.createIPacket(client, 0)
+        packet["data"] = "greeting packet"
+        client.addNewIMessage(packet)
+
+    def disconnectOfClient(self, client):
+        print("disconnecting "+str(client.addr))
+
+    def getSimplePacket(self, client, packet):
         client.ready = True
-        client.holdConnection()
 
-    def gameLogicAction(self, dt):
-        #rects creating
+    def getImportantPacket(self, client, packet):
+        client.ready = True
+        print("Client: "+packet["data"])
+
+    def objectInTheCenter(self, o):
+        if (abs(o.x-320) < 500):
+            if (abs(o.y-240) < 500):
+                return True
+        return False
+
+    def getFilterIdKeys(self, client, idListKeys):
+        return list(filter(lambda x: self.objectInTheCenter(self.allGameObjects[x]), idListKeys))
+
+    def update(self, dt):
         self.timer += dt
-        if (self.timer > 0.25):
+        if (self.timer > 0.2):
             self.initRects()
             self.timer = 0
 
-        #sending id
-        #sending states
-        self.timerStateUpdate += dt
-        if (self.timerStateUpdate > 0.1):
-            self.timerStateUpdate -= 0.1
-            self.sendId()
-            self.sendState()
+        for i in list(self.allGameObjects.keys()):
+            self.allGameObjects[i].update(dt)
+            if self.allGameObjects[i].y > 1000:
+                del self.allGameObjects[i]
 
-        #game logic rects
-        for i in list(self.list1.keys()):
-            self.list1[i].update(dt)
-            if self.list1[i].y > 800:
-                del self.list1[i]
-
-        #game logic clients time
-        with self.handler.clientLock:
-            for a in list(self.handler.clientList.keys()):
-                c = self.handler.clientList[a]
-                if (not c.checkConnection(1)):
-                    del self.handler.clientList[a]
-                    print("removing client "+str(a))
-
-    def sendId(self):
-        packet = {"p_id":0}
-        idli = list(self.list1.keys())
-        packet["id"] = idli
-        data = json.dumps(packet)
-        self.handler.sentToAll(data)
-
-    def sendState(self):
-        for i in self.list1.values():
-            state = i.getState()
-            state["p_id"] = 1
-            self.handler.sentToAll(json.dumps(state))
-
-    id_index = 0
     def initRects(self):
         for i in range(5):
             r = rect.Rect(random.randrange(0, 640), self.id_index)
             self.id_index += 1
-            self.list1[self.id_index] = r
+            self.allGameObjects[self.id_index] = r
 
     def __init__(self):
-        self.handler = handler.Handler("", 9999, self.serverDataAction, self.gameLogicAction)
-        self.handler.startReading()
-        self.handler.startGameLogic()
-        pass
+        super().__init__(server.Server("", 9999, self, 1000))
 
-helper = Helper()
+game = Game()
