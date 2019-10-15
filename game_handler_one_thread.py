@@ -1,7 +1,6 @@
 import math
 import time
 import json
-import threading
 
 class GameHandler:
 
@@ -9,19 +8,28 @@ class GameHandler:
     timerStateUpdate = 0
     allGameObjects = {}
     stateUpdateTimeInterval = 0.1
+    
+    timeBetweenResendingImportant = 0.08
+    resendingTimer = 0
+
+    gameWorking = True
 
     def __init__(self, server):
         self.server = server
         self.startGameLogic()
 
     def startGameLogic(self):
-        while self.server.working:
+        while self.gameWorking:
+            self.server.reading()
             currentTime = time.time()
             dt = currentTime - self.lastFrameTime
             self.lastFrameTime = currentTime
-            
             self.updateStates(dt)
             self.update(dt)
+            self.resendingTimer += dt
+            if (self.resendingTimer > self.timeBetweenResendingImportant):
+                self.resendingTimer -= self.timeBetweenResendingImportant
+                self.server.writing()
 
     def updateStates(self, dt):
         self.timerStateUpdate += dt
@@ -65,14 +73,12 @@ class GameHandler:
         packet = {}
         packet["im"] = 0
         packet["p_id"] = p_id
-        with client.counterLock:
-            packet["num"] = self.getCounter(client, False)
+        packet["num"] = self.getCounter(client, False)
         return packet
 
     def createIPacket(self, client, p_id):
         packet = {}
         packet["im"] = 1
-        packet["p_id"] = p_id
-        with client.counterLock:
-            packet["num"] = self.getCounter(client, True)
+        packet["p_id"] = p_id 
+        packet["num"] = self.getCounter(client, True)
         return packet

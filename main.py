@@ -1,5 +1,5 @@
-import server
-import game_handler
+import server_one_thread as server
+import game_handler_one_thread as game_handler
 import random
 import rect
 
