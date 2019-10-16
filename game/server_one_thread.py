@@ -1,5 +1,5 @@
 import socket
-import client_one_thread as client
+import game.client_one_thread as client
 import time
 import json
 

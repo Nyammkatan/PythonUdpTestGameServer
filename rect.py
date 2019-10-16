@@ -1,5 +1,5 @@
 import random
-import gameUtils
+import game.gameUtils as gameUtils
 
 class Rect:
 
@@ -13,10 +13,14 @@ class Rect:
         self.x = x
         self.a = random.randrange(0, 360)
         self.id = id
+        self.right = True if random.random() >= 0.5 else False
 
     def update(self, dt):
         self.y+=self.vy*dt
-        self.a+=200*dt
+        if (self.right):
+            self.a+=200*dt
+        else:
+            self.a-=200*dt
         
     def getState(self, packet):
         packet["x"] = gameUtils.truncate(self.x, 2)
