@@ -43,6 +43,9 @@ class GameHandler:
     def getFilterIdKeys(self, client, idListKeys):
         return idListKeys
 
+    def stateAction(self):
+        pass
+
     def sendIdAndState(self):
         for client in list(self.server.getClientList().values()):
             if (client.ready):
@@ -54,6 +57,7 @@ class GameHandler:
                     packet = self.createSimplePacket(client, 1)
                     packet = self.allGameObjects[i].getState(packet)
                     client.send(packet)
+        self.stateAction()
 
     def getCounter(self, client, important):
         value = 0

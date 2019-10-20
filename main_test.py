@@ -10,7 +10,8 @@ class Game(game_handler.GameHandler):
 
     def newClientJoined(self, client):
         print("new client "+str(client.addr))
-        packet = self.createIPacket(client, 0)
+        packet = self.cr
+        eateIPacket(client, 0)
         packet["data"] = "greeting packet"
         client.addNewIMessage(packet)
 

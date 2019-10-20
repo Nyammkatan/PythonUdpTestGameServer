@@ -9,20 +9,20 @@ class WorldClass:
 
     DIRT = 1
     DIRT_FLOOR = 0
-    ICE = 3
-    ICE_FLOOR = 2
-    JUNGLE = 5
-    JUNGLE_FLOOR = 4
-    FIRE = 7
-    FIRE_FLOOR = 6
-    SAND = 9
-    SAND_FLOOR = 8
+    ICE = 7
+    ICE_FLOOR = 6
+    JUNGLE = 3
+    JUNGLE_FLOOR = 2
+    FIRE = 9
+    FIRE_FLOOR = 8
+    SAND = 5
+    SAND_FLOOR = 4
     RUINS = 11
     RUINS_FLOOR = 10
-    NEON = 13
-    NEON_FLOOR = 12
-    SEW = 15
-    SEW_FLOOR = 14
+    NEON = 15
+    NEON_FLOOR = 14
+    SEW = 13
+    SEW_FLOOR = 12
     WATER = 20
     LAVA = 21
 
@@ -41,11 +41,15 @@ class WorldClass:
 
     }
 
-    def __init__(self, seed):
+    def __init__(self, name, seed, array):
+        self.name = name
         random.seed(seed)
-        self.array = [[0 for i in range(self.w)] for j in range(self.h)]
-        self.generateWorld(8)
-        self.drawMap()
+        if (array == None):
+            self.array = [[0 for i in range(self.w)] for j in range(self.h)]
+            self.generateWorld(8)
+            self.drawMap()
+        else:
+            self.array = array
 
     def getGeneratedNoiseMap(self, res):
         narray = [[0 for i in range(self.w)] for j in range(self.h)]
